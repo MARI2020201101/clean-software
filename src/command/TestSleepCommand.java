@@ -23,12 +23,6 @@ class TestSleepCommand {
         assertTrue(sleepTime < 1100);
         assertTrue(commandExecuted);
     }
-
-
-
-
-
-
 }
 class ActiveObjectEngine {
     LinkedList itsCommands =new LinkedList();
