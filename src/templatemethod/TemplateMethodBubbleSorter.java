@@ -21,7 +21,7 @@ abstract class TemplateMethodBubbleSorter {
     }
 
     protected int doSort(){
-        for(int i = length-2 ; i >= 0 ; i--){
+        for(int i = length-2 ; i >= 0 ; i--){ //흐름제어를 부모클래스에서 수행한다. 자식클래스는 로직만 구현.
             for(int j = 0; j <= i ; j++){
                 if(outOfOrder(j)){
                     swap(j); operations++;
