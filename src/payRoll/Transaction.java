@@ -1,37 +1,40 @@
 package payRoll;
 
 interface Transaction {
+    boolean validate();
     void execute();
 }
 abstract class AddEmployeeTransaction implements Transaction{
-    private Database database = new PayrollDatabase();
-    abstract protected Employee createEmployee();
-    abstract protected int getEmployId();
+    private String employName;
+    private String address;
+
     @Override
-    public void execute() {
-        database.addEmployee(getEmployId(), createEmployee());
+    public boolean validate() {
+        if(employName.isEmpty() || address.isEmpty()) return false;
+        else return true;
     }
+
 }
 class AddHourlyEmployeeTransaction extends AddEmployeeTransaction{
     private double hourlyPayment;
     private int employID;
     private String employName;
     private String address;
+    private Database database;
 
     public AddHourlyEmployeeTransaction(int employID, String employName, String address, double hourlyPayment) {
         this.hourlyPayment = hourlyPayment;
         this.employID = employID;
         this.employName = employName;
         this.address = address;
+        this.database = new PayrollDatabase();
     }
 
-    @Override
-    protected Employee createEmployee() {
-        return new HourlyEmployee(employID, employName, address, hourlyPayment);
-    }
 
     @Override
-    protected int getEmployId() {
-        return employID;
+    public void execute() {
+        if(validate()){
+            database.addEmployee(employID, new HourlyEmployee(employID,employName,address,hourlyPayment));
+        }
     }
 }
