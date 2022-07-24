@@ -5,36 +5,103 @@ interface Transaction {
     void execute();
 }
 abstract class AddEmployeeTransaction implements Transaction{
-    private String employName;
-    private String address;
-
-    @Override
-    public boolean validate() {
-        if(employName.isEmpty() || address.isEmpty()) return false;
-        else return true;
-    }
-
-}
-class AddHourlyEmployeeTransaction extends AddEmployeeTransaction{
-    private double hourlyPayment;
     private int employID;
     private String employName;
     private String address;
-    private Database database;
 
-    public AddHourlyEmployeeTransaction(int employID, String employName, String address, double hourlyPayment) {
-        this.hourlyPayment = hourlyPayment;
+    public AddEmployeeTransaction(int employID, String employName, String address) {
         this.employID = employID;
         this.employName = employName;
         this.address = address;
-        this.database = new PayrollDatabase();
     }
 
+    @Override
+    public final void execute() {
+        Employee employee = new Employee(employID,employName,address);
+        employee.setClassification(getPaymentClassification());
+        employee.setSchedule(getPaymentSchedule());
+        employee.setMethod(getPaymentMethod());
+        PayrollDatabase.database().addEmployee(employee.getEmployId(), employee);
+    }
 
     @Override
-    public void execute() {
-        if(validate()){
-            database.addEmployee(employID, new HourlyEmployee(employID,employName,address,hourlyPayment));
-        }
+    public final boolean validate() {
+        return employName != null && employName.length() != 0
+                && address != null && address.length() != 0;
+    }
+
+    protected abstract PaymentSchedule getPaymentSchedule();
+    protected abstract PaymentClassification getPaymentClassification();
+    protected abstract PaymentMethod getPaymentMethod();
+}
+class AddHourlyEmployeeTransaction extends AddEmployeeTransaction{
+    private final double hourlyPayment;
+
+    public AddHourlyEmployeeTransaction(int employID, String employName, String address, double hourlyPayment) {
+        super(employID,employName,address);
+        this.hourlyPayment = hourlyPayment;
+    }
+
+    @Override
+    protected PaymentSchedule getPaymentSchedule() {
+        return new WeeklySchedule();
+    }
+
+    @Override
+    protected PaymentClassification getPaymentClassification() {
+        return new HourlyClassification(hourlyPayment);
+    }
+
+    @Override
+    protected PaymentMethod getPaymentMethod() {
+        return new HoldMethod();
+    }
+}
+class AddSalariedEmployeeTransaction extends AddEmployeeTransaction{
+    private final double salary;
+
+    public AddSalariedEmployeeTransaction(int employID, String employName, String address, double salary) {
+        super(employID,employName,address);
+        this.salary = salary;
+    }
+
+    @Override
+    protected PaymentSchedule getPaymentSchedule() {
+        return new MonthlySchedule();
+    }
+
+    @Override
+    protected PaymentClassification getPaymentClassification() {
+        return new SalariedClassification(salary);
+    }
+
+    @Override
+    protected PaymentMethod getPaymentMethod() {
+        return new HoldMethod();
+    }
+}
+class AddCommissionedEmployeeTransaction extends AddEmployeeTransaction{
+    private final double salary;
+    private final double commissionRate;
+
+    public AddCommissionedEmployeeTransaction(int employID, String employName, String address, double salary, double commissionRate) {
+        super(employID,employName,address);
+        this.salary = salary;
+        this.commissionRate = commissionRate;
+    }
+
+    @Override
+    protected PaymentSchedule getPaymentSchedule() {
+        return new BiWeeklySchedule();
+    }
+
+    @Override
+    protected PaymentClassification getPaymentClassification() {
+        return new CommissionedClassification(salary, commissionRate);
+    }
+
+    @Override
+    protected PaymentMethod getPaymentMethod() {
+        return new HoldMethod();
     }
 }
