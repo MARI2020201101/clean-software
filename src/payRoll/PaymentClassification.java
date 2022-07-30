@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface PaymentClassification {
+
 }
 class SalariedClassification implements PaymentClassification{
     private double salary;
@@ -24,6 +25,13 @@ class HourlyClassification implements PaymentClassification{
         timeCards.add(timeCard);
     }
 
+    @Override
+    public String toString() {
+        return "HourlyClassification{" +
+                "hourlyRate=" + hourlyRate +
+                ", timeCards=" + timeCards +
+                '}';
+    }
 }
 class CommissionedClassification implements PaymentClassification{
     private double salary;

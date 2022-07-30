@@ -13,9 +13,9 @@ interface Database {
     void clear();
 }
 class PayrollDatabase implements Database{
-    private static PayrollDatabase singletonDatabase = new PayrollDatabase();
-    private Map<Integer, Employee> employees = new HashMap<>();
-    private Map<Integer, Employee> unionEmployees = new HashMap<>();
+    private static final PayrollDatabase singletonDatabase = new PayrollDatabase();
+    private final Map<Integer, Employee> employees = new HashMap<>();
+    private final Map<Integer, Employee> unionEmployees = new HashMap<>();
 
     public static Database database(){
         return singletonDatabase;

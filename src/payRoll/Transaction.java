@@ -1,7 +1,6 @@
 package payRoll;
 
 interface Transaction {
-    boolean validate();
     void execute();
 }
 abstract class AddEmployeeTransaction implements Transaction{
@@ -24,12 +23,6 @@ abstract class AddEmployeeTransaction implements Transaction{
         PayrollDatabase.database().addEmployee(employee.getEmployId(), employee);
     }
 
-    @Override
-    public final boolean validate() {
-        return employName != null && employName.length() != 0
-                && address != null && address.length() != 0;
-    }
-
     protected abstract PaymentSchedule getPaymentSchedule();
     protected abstract PaymentClassification getPaymentClassification();
     protected abstract PaymentMethod getPaymentMethod();
@@ -48,10 +41,9 @@ class AddHourlyEmployeeTransaction extends AddEmployeeTransaction{
     }
 
     @Override
-    protected PaymentClassification getPaymentClassification() {
+    protected HourlyClassification getPaymentClassification() {
         return new HourlyClassification(hourlyPayment);
     }
-
     @Override
     protected PaymentMethod getPaymentMethod() {
         return new HoldMethod();
@@ -71,7 +63,7 @@ class AddSalariedEmployeeTransaction extends AddEmployeeTransaction{
     }
 
     @Override
-    protected PaymentClassification getPaymentClassification() {
+    protected SalariedClassification getPaymentClassification() {
         return new SalariedClassification(salary);
     }
 
@@ -96,7 +88,7 @@ class AddCommissionedEmployeeTransaction extends AddEmployeeTransaction{
     }
 
     @Override
-    protected PaymentClassification getPaymentClassification() {
+    protected CommissionedClassification getPaymentClassification() {
         return new CommissionedClassification(salary, commissionRate);
     }
 

@@ -1,11 +1,13 @@
 package payRoll;
 
+import java.time.LocalDateTime;
+
 public class ServiceCharge {
     private int employeeID;
-    private double amount;
+    private LocalDateTime date;
 
-    public ServiceCharge(int employeeID, double amount) {
+    public ServiceCharge(int employeeID, LocalDateTime date) {
         this.employeeID = employeeID;
-        this.amount = amount;
+        this.date = date;
     }
 }
