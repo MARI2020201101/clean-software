@@ -1,0 +1,4 @@
+package weatherstation;
+
+class BarometricPressureSensorImp {
+}
