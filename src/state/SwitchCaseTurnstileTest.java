@@ -15,28 +15,28 @@ class SwitchCaseTurnstileTest {
         turnstile = new Turnstile(controller);
     }
     @Test
-    public void testStateMachine1(){
+    public void testCoinInLockedState(){
         turnstile.state = Turnstile.LOCKED;
         turnstile.event(Turnstile.COIN);
         assertEquals(Turnstile.UNLOCKED, turnstile.state);
         assertTrue(controller.unlocked);
     }
     @Test
-    public void testStateMachine2(){
+    public void testPassInLockedState(){
         turnstile.state = Turnstile.LOCKED;
         turnstile.event(Turnstile.PASS);
         assertEquals(Turnstile.LOCKED, turnstile.state);
         assertTrue(controller.alarm);
     }
     @Test
-    public void testStateMachine3(){
+    public void testCoinInUnlockedState(){
         turnstile.state = Turnstile.UNLOCKED;
         turnstile.event(Turnstile.COIN);
         assertEquals(Turnstile.UNLOCKED, turnstile.state);
         assertTrue(controller.thankyou);
     }
     @Test
-    public void testStateMachine4(){
+    public void testPassInUnlockedState(){
         turnstile.state = Turnstile.UNLOCKED;
         turnstile.event(Turnstile.PASS);
         assertEquals(Turnstile.LOCKED, turnstile.state);
